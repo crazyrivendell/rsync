@@ -1,0 +1,37 @@
+# rsync + inotify
+# inotify need kernel >= 2.6.13,if not,install manual
+#
+# 1 install in client and server
+# 1.1 install rsync and inotify
+# sudo apt-get install rsync             (server and client need,usage see in https://rsync.samba.org/documentation.html)
+# sudo apt-get install inotify-tools     (client need)
+#
+# 2.config
+# create rsyncd.conf and set
+# config and scripts saved in https://github.com/crazyrivendell/rsync.git
+# 
+# 3.1 rsync
+#
+# 3.1.1 server (ali ecs(media server): root@120.24.86.69 11111111)
+# manual:
+# rcync --deamon --config=/webserver/rsync/rsyncd.conf
+# auto:
+# bash -x rsyncd.sh
+#
+# 3.1.2 client (video source machine,r730.kandao.tech kandao password is space)
+# manual
+# rsync -avH --progress --delete --password-file=/etc/rsyncd.passwd /test/ root@120.24.86.69::data
+#
+# auto
+# before inotify.sh start, start all files to sync by manual
+#	use crontab to rsync per 2 hour
+#   --crontab -e
+#   --* */2 * * * rsync -avz --progress --delete --password-file=/etc/rsyncd.passwd /test root@120.24.86.69::data
+# bash -x inotify.sh
+#
+# 4 questions or tips
+#   --The permissions of sync folders should be 755 own to correct useid and groupid
+#   --The permissions of password file should be 600,and user should add to /etc/passwd,the password should be correct
+#   --Make sure that the remote folders and local folders is exist
+#   --Check the modules name before start
+# 
